@@ -1,0 +1,6 @@
+-c pins.txt
+-c requirements.txt
+-r requirements.txt
+
+sphinx
+sphinx-rtd-theme
