@@ -24,8 +24,8 @@ def main():
                 try:
                     schema_map = extract_schemas(name, file_path)
                     generate_docs(schema_map, args.build_dir)
-                except Exception as e:  # TODO: Better error handling
-                    print(f'{name} failed: {e}')
+                except Exception as e:
+                    print(f'{file_path} failed: {e}')
                     continue
 
     print('Docs successfully generated.')

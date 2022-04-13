@@ -2,7 +2,7 @@ import inspect
 from importlib import util
 
 from ..classes.cerberus_schema import CerberusSchema
-from .mdutils import ExtendedMdutils
+from ..classes.markdown_utils import MarkDownUtils
 
 
 def extract_schemas(name, file_path):
@@ -35,15 +35,11 @@ def generate_docs(schema_map, build_dir):
         schemas = schema_map[class_name]
         for i, schema in enumerate(schemas):
             file_mode = 'w+' if i == 0 else 'a'
-            md_file = ExtendedMdutils(
+            md_file = MarkDownUtils(
                 file_name=f'{class_name}_cerberus_doc.md',
-                title=class_name,
                 file_mode=file_mode,
                 file_path=build_dir
             )
-
-            for key in schema.keys():
-                md_file.new_header(level=1, title=f'{key}')
-                md_file.new_list(schema[key].keys())
-
+            md_file.generate_header(level=2, title=class_name)
+            md_file.generate_attributes(class_name, schema)
             md_file.create_md_file()
