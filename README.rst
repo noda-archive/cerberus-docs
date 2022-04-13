@@ -8,7 +8,7 @@ Cerberus-docs
 
 About
 =====
-Library for generating documentation for Cerberus schemas.
+Library for generating documentation for `Cerberus <https://docs.python-cerberus.org/en/stable/>`_ schemas.
 
 You can find the latest, most up to date, documentation at our `doc site <https://noda.github.io/cerberus-docs/>`_.
 
@@ -54,6 +54,10 @@ Required dependencies:
 Dev dependencies:
 
     pip install -r requirements/dev.txt
+
+Documentation dependencies:
+
+    pip install -r requirements/docs.txt
 
 Update requirements
 -------------------
@@ -122,8 +126,10 @@ Activate pre-commit hooks
 Documentation
 =============
 
-Build documentation
--------------------
+The documentation is automatically built and deployed via github workflow.
+
+Build documentation locally
+---------------------------
     tox -e build-docs
 
 This will create a docs/_build/html folder with an index.html file that can be opened in a browser.
