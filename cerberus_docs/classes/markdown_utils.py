@@ -232,5 +232,5 @@ class MarkDownUtils:
             The created MarkDown file
         """
         md_file = MarkDownFile(self.file_name, self.file_mode, self.file_path)
-        md_file.write(self.content, self.file_mode)
+        md_file.write(self.content)
         return md_file
