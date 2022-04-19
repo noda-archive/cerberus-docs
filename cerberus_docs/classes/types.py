@@ -2,4 +2,6 @@ from typing import Dict, List, Any, OrderedDict, Union
 
 Schema = Dict[str, Any]
 SchemaMap = Dict[str, List[Schema]]
-Attribute = Union[Dict[str, Any], OrderedDict[str, Any]]
+SortedAttribute = OrderedDict[str, Any]
+FormattedAttribute = Dict[str, str]
+Attribute = Union[Dict[str, Any], SortedAttribute, FormattedAttribute]

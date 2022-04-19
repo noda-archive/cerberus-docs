@@ -1,8 +1,8 @@
 from collections import OrderedDict
-from typing import Optional, Dict, Any, List, Union, OrderedDict as OrderedDictType
+from typing import Optional, Dict, Any, List, Union
 
 from .markdown_file import MarkDownFile
-from .types import Schema, Attribute
+from .types import Schema, Attribute, SortedAttribute, FormattedAttribute
 
 
 class MarkDownUtils:
@@ -151,7 +151,7 @@ class MarkDownUtils:
         """
         return f'[{class_name}](#{class_name})'
 
-    def _sort_attribute_fields_order(self, attribute: Attribute) -> OrderedDictType[str, Any]:
+    def _sort_attribute_fields_order(self, attribute: Attribute) -> SortedAttribute:
         """
         Sorts the attribute keys by the order in the priority list.
         This will also filter out any validation rule that is not supported (is in the priority list)
@@ -172,7 +172,7 @@ class MarkDownUtils:
         """
         return self.validation_rule_separators.get(validation_rule, ' ')
 
-    def _attribute_to_string(self, attribute: Attribute) -> str:
+    def _attribute_to_string(self, attribute: FormattedAttribute) -> str:
         """
         Takes an attribute and converts it to a string with separators between every validation rule.
         Args:
@@ -211,7 +211,7 @@ class MarkDownUtils:
         for key in schema.keys():
             self._append_to_content(self._generate_name(key))
             attribute: Attribute = schema[key]
-            formatted_attribute: Attribute = {}
+            formatted_attribute: FormattedAttribute = {}
             for i, validation_rule in enumerate(attribute):
                 if validation_rule == 'schema':
                     additional_schema_name: str = f'{class_name}{key.capitalize()}'
@@ -219,7 +219,7 @@ class MarkDownUtils:
                     formatted_attribute[validation_rule] = self._generate_schema(additional_schema_name)
                 else:
                     formatted_attribute[validation_rule] = self.generator_map.get(validation_rule, lambda *args: None)(attribute[validation_rule])  # noqa: E501
-            sorted_attribute: Attribute = self._sort_attribute_fields_order(formatted_attribute)
+            sorted_attribute: SortedAttribute = self._sort_attribute_fields_order(formatted_attribute)
             self._append_to_content(self._attribute_to_string(sorted_attribute))
         for additional_schema_name in additional_schemas.keys():
             self.generate_header(level=2, title=additional_schema_name)
