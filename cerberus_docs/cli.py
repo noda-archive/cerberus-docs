@@ -1,4 +1,5 @@
 import os
+import sys
 from argparse import ArgumentParser, Namespace
 
 from .classes.types import SchemaMap
@@ -21,7 +22,7 @@ def dir_path(string: str) -> str:
         raise NotADirectoryError(string)
 
 
-def main() -> None:
+def parse_args(args) -> None:
     """
     The entry point for argparse.
     Will generate documentation of the CerberusSchemas that can be found in the given source-dir
@@ -29,7 +30,7 @@ def main() -> None:
     parser: ArgumentParser = ArgumentParser(prog='cerberus-docs', description='Cerberus-docs package')
     parser.add_argument('--source-dir', type=dir_path, action='store', default=os.getcwd())
     parser.add_argument('--build-dir', type=dir_path, action='store', default=os.getcwd())
-    args: Namespace = parser.parse_args()
+    args: Namespace = parser.parse_args(args)
 
     for root, dirs, filenames in os.walk(args.source_dir):
         for name in filenames:
@@ -43,6 +44,10 @@ def main() -> None:
                     continue
 
     print('Docs successfully generated.')
+
+
+def main() -> None:
+    parse_args(sys.argv[1:])
 
 
 if __name__ == '__main__':

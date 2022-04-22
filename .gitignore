@@ -6,6 +6,7 @@ build
 docs/_build/*
 test/cover
 test/.coverage
+test/test_dir
 scripts
 *.egg-info
 

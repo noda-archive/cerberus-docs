@@ -18,13 +18,15 @@ class TestMarkDownUtils(unittest.TestCase):
             'schema': {},
             'default': {},
         }
+        self.current_dir = os.path.dirname(os.path.realpath(__file__))
         self.test_folder: str = 'test_dir'
+        self.test_folder_path = os.path.join(self.current_dir, self.test_folder)
         self.file_name: str = 'testfile'
-        self.md_utils = MarkDownUtils(self.file_name, file_path=self.test_folder)
-        os.mkdir(self.test_folder)
+        self.md_utils = MarkDownUtils(self.file_name, file_path=self.test_folder_path)
+        os.mkdir(self.test_folder_path)
 
     def tearDown(self) -> None:
-        shutil.rmtree(self.test_folder)
+        shutil.rmtree(self.test_folder_path)
 
     def test_is_last_item(self) -> None:
         iterator: List[int] = [1, 2, 3]
@@ -148,5 +150,5 @@ class TestMarkDownUtils(unittest.TestCase):
         content = 'Hello World!'
         self.md_utils.content = content
         self.md_utils.create_md_file()
-        with open(os.path.join(self.test_folder, self.file_name), 'r') as file:
+        with open(os.path.join(self.test_folder_path, self.file_name), 'r') as file:
             self.assertEqual(file.read(), content)
