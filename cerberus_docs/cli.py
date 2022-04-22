@@ -47,8 +47,8 @@ def parse_args(args) -> None:
 
 
 def main() -> None:
-    parse_args(sys.argv[1:])
+    parse_args(sys.argv[1:])  # pragma: no cover
 
 
 if __name__ == '__main__':
-    main()
+    main()  # pragma: no cover
