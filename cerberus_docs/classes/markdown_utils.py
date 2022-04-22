@@ -14,7 +14,8 @@ class MarkDownUtils:
                  file_mode: Optional[str] = 'w+',
                  file_path: Optional[str] = None
                  ) -> None:
-        """MarkDownUtils constructor
+        """
+        MarkDownUtils constructor
 
         Attributes:
             self.content (str): Contains the string that will be written to the
@@ -60,6 +61,7 @@ class MarkDownUtils:
     def _is_last_item(self, index: int, iterable: List) -> bool:
         """
         Returns if the input index is the last entry in the list or not
+
         Args:
              index (int): index to check
              iterable (List): List to compare the index with
@@ -69,6 +71,7 @@ class MarkDownUtils:
     def _append_to_content(self, data: str) -> None:
         """
         Append data to self.content
+
         Args:
             data (str): String value to append.
         """
@@ -77,8 +80,10 @@ class MarkDownUtils:
     def _generate_name(self, name: str) -> str:
         """
         Generate the name of a validation rule in MarkDown format.
+
         Args:
              name (str): Name to generate MarkDown formatted string from.
+
         Returns:
             MarkDown formatted string.
         """
@@ -87,8 +92,10 @@ class MarkDownUtils:
     def _generate_required(self, is_required: bool) -> str:
         """
         Generate the validation rule 'required' in MarkDown format.
+
         Args:
              is_required (bool): Determines what string should be returned.
+
         Returns:
             MarkDown formatted string depending on if is_required is True or False.
         """
@@ -97,8 +104,10 @@ class MarkDownUtils:
     def _generate_type(self, attribute_type: str) -> str:
         """
         Generate the validation rule 'type' in MarkDown format.
+
         Args:
              attribute_type (str): Type to generate MarkDown formatted string from.
+
         Returns:
             MarkDown formatted string.
         """
@@ -107,8 +116,10 @@ class MarkDownUtils:
     def _generate_allowed(self, allowed_values: List[Union[str, int]]) -> str:
         """
         Generate the validation rule 'allowed' in MarkDown format.
+
         Args:
              allowed_values (List[Union[str, int]]): List of values that should be displayed in a MarkDown list.
+
         Returns:
             MarkDown formatted string.
         """
@@ -124,8 +135,10 @@ class MarkDownUtils:
     def _generate_regex(self, regex: str) -> str:
         """
         Generate the validation rule 'regex' in MarkDown format.
+
         Args:
              regex (str): Regex string to generate MarkDown formatted string from
+
         Returns:
             MarkDown formatted string.
         """
@@ -134,8 +147,10 @@ class MarkDownUtils:
     def _generate_default(self, default_value: Any) -> str:
         """
         Generate the validation rule 'default' in MarkDown format.
+
         Args:
              default_value (any): Default value to generate MarkDown formatted string from
+
         Returns:
             MarkDown formatted string.
         """
@@ -144,8 +159,10 @@ class MarkDownUtils:
     def _generate_schema(self, class_name: str) -> str:
         """
         Generate the validation rule 'schema' in MarkDown format.
+
         Args:
              class_name (str): Class name to generate MarkDown formatted string from
+
         Returns:
             MarkDown formatted string.
         """
@@ -155,8 +172,10 @@ class MarkDownUtils:
         """
         Sorts the attribute keys by the order in the priority list.
         This will also filter out any validation rule that is not supported (is in the priority list)
+
         Args:
              attribute (Attribute) Attribute to sort
+
         Returns:
             OrderedDict of the attributes keys ordered by the priority list
         """
@@ -167,6 +186,7 @@ class MarkDownUtils:
     def _get_validation_rule_separator(self, validation_rule: str) -> str:
         """
         Returns the correct separator for the input validation rule. Defaults to a space if no explicit rule is found.
+
         Args:
              validation_rule (str) The validation rule to get the separator for
         """
@@ -175,8 +195,10 @@ class MarkDownUtils:
     def _attribute_to_string(self, attribute: FormattedAttribute) -> str:
         """
         Takes an attribute and converts it to a string with separators between every validation rule.
+
         Args:
             attribute (Attribute): The attribute to convert to a string
+
         Returns:
             String representation of attribute
         """
@@ -190,6 +212,7 @@ class MarkDownUtils:
     def generate_header(self, title: str, level: Optional[int] = 1) -> None:
         """
         Generate a header in MarkDown format given a title and level and appends it to self.content.
+
         Args:
              title (str): Header title
              level (Optional[int]): Header level, 1 - 6 is allowed. Default is 1.
@@ -203,6 +226,7 @@ class MarkDownUtils:
         Takes a schema, generates MarkDown strings for every attribute -> validation rule and appends it to
         self.content. If the attribute contains a schema validation rule, the method will recursively generate
         MarkDown strings through the whole Schema.
+
         Args:
              class_name (str): The class name of the class the schema sent in was found.
              schema (Schema): The schema that the function should generate documentation from.
@@ -228,6 +252,7 @@ class MarkDownUtils:
     def create_md_file(self) -> MarkDownFile:
         """
         Creates a MarkDown file and writes self.content to it.
+
         Returns:
             The created MarkDown file
         """

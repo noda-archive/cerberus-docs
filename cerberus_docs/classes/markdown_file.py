@@ -36,6 +36,7 @@ class MarkDownFile:
     def write(self, data: str) -> None:
         """
         Write to file.
+
         Args:
             data (str): Content that should be written to the file.
         """
