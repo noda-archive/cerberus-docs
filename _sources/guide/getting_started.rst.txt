@@ -14,7 +14,32 @@ Assuming that you have Python 3.7 or higher and ``virtualenv`` installed, set up
 
 Using Cerberus-docs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-TODO
+In order for cerberus-docs to be able to find the Cerberus schemas, every schema that should be documented must be wrapped by the CerberusSchema class.
+
+To retrieve the original dict from the class, use the ``.to_schema()`` method.
+
+.. code-block:: python
+
+    from cerberus_docs import CerberusSchema
+
+    class Foo:
+        cerberus_schema = CerberusSchema({'name': {'type': 'string'}})
+
+        def __init__(self):
+            v = Validator(self.cerberus_schema.to_schema())
+
+To run cerberus-docs use the command ``cerberus-docs`` and specify:
+
+``--source-dir``: The directory with the source code. Cerberus-docs will find every python module in the directory tree and look for CerberusSchema classes. Defaults to the current working directory.
+
+``--build-dir``: The directory where the generated documentation files will be saved. Defaults to the current working directory.
+
+Example:
+
+.. code-block:: sh
+
+    $ cerberus-docs --source-dir ./myProject --build-dir ./myDocs
+    Docs successfully generated.
 
 Running Tests
 ~~~~~~~~~~~~~
@@ -29,7 +54,7 @@ versions of Python installed, otherwise you must pass ``-e``.
 
 Enable Debug Logging
 ~~~~~~~~~~~~~~~~~~~~
-Logging can be enabled in order to debug sent requests to the EnergyView API. To enable logging, add a handler to the `selfhost_client` logger:
+To enable logging, add a handler to the `cerberus_docs` logger:
 
 .. code-block:: python
 

@@ -18,6 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Classes" href="../references/classes/index.html" />
     <link rel="prev" title="&lt;no title&gt;" href="index.html" /> 
 </head>
 
@@ -43,6 +44,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#enable-debug-logging">Enable Debug Logging</a></li>
 </ul>
 </li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/classes/index.html">Classes</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/exceptions.html">Exceptions</a></li>
 </ul>
 
         </div>
@@ -83,7 +90,25 @@ $ python -m pip install -r requirements/requirements.txt
 </div>
 <section id="using-cerberus-docs">
 <h2>Using Cerberus-docs<a class="headerlink" href="#using-cerberus-docs" title="Permalink to this headline"></a></h2>
-<p>TODO</p>
+<p>In order for cerberus-docs to be able to find the Cerberus schemas, every schema that should be documented must be wrapped by the CerberusSchema class.</p>
+<p>To retrieve the original dict from the class, use the <code class="docutils literal notranslate"><span class="pre">.to_schema()</span></code> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cerberus_docs</span> <span class="kn">import</span> <span class="n">CerberusSchema</span>
+
+<span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+    <span class="n">cerberus_schema</span> <span class="o">=</span> <span class="n">CerberusSchema</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}})</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cerberus_schema</span><span class="o">.</span><span class="n">to_schema</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>To run cerberus-docs use the command <code class="docutils literal notranslate"><span class="pre">cerberus-docs</span></code> and specify:</p>
+<p><code class="docutils literal notranslate"><span class="pre">--source-dir</span></code>: The directory with the source code. Cerberus-docs will find every python module in the directory tree and look for CerberusSchema classes. Defaults to the current working directory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--build-dir</span></code>: The directory where the generated documentation files will be saved. Defaults to the current working directory.</p>
+<p>Example:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cerberus-docs --source-dir ./myProject --build-dir ./myDocs
+Docs successfully generated.
+</pre></div>
+</div>
 </section>
 <section id="running-tests">
 <h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline"></a></h2>
@@ -97,7 +122,7 @@ $ tox -e py37,py38
 </section>
 <section id="enable-debug-logging">
 <h2>Enable Debug Logging<a class="headerlink" href="#enable-debug-logging" title="Permalink to this headline"></a></h2>
-<p>Logging can be enabled in order to debug sent requests to the EnergyView API. To enable logging, add a handler to the <cite>selfhost_client</cite> logger:</p>
+<p>To enable logging, add a handler to the <cite>cerberus_docs</cite> logger:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;cerberus_docs&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">())</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;cerberus_docs&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
@@ -111,6 +136,7 @@ $ tox -e py37,py38
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../references/classes/index.html" class="btn btn-neutral float-right" title="Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
