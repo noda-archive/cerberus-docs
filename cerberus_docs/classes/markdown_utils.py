@@ -168,7 +168,7 @@ class MarkDownUtils:
         """
         return f'[{class_name}](#{class_name})'
 
-    def _sort_attribute_fields_order(self, attribute: Attribute) -> SortedAttribute:
+    def _sort_attribute_fields_order(self, attribute: FormattedAttribute) -> SortedAttribute:
         """
         Sorts the attribute keys by the order in the priority list.
         This will also filter out any validation rule that is not supported (is in the priority list)
@@ -221,6 +221,41 @@ class MarkDownUtils:
         header: str = f"\n{'#' * restricted_level} {title}\n\n"
         self._append_to_content(header)
 
+    def _format_validation_rule(self, validation_rule: str, attribute: Attribute, schema_name: str) -> Optional[str]:
+        """
+        Takes a validation rule and returns the generated markdown string value of that rule.
+
+        Args:
+            validation_rule (str): The validation rule to generate a markdown string from.
+            attribute: (Attribute): The attribute which the validation rule belongs to.
+            schema_name (str): The schema name
+
+        """
+        if validation_rule == 'schema':
+            return self._generate_schema(schema_name)
+        return self.generator_map.get(validation_rule, lambda *args: None)(attribute[validation_rule])  # noqa: E501
+
+    def _get_schema(self, validation_rule: str, attribute: Attribute) -> Optional[Schema]:
+        """
+        Returns a schema from an attribute depending on the attribute type.
+        Used when saving schemas for later use, in order to recursively generate attributes with nested schemas.
+
+        Args:
+            validation_rule (str): A validation rule
+            attribute (Attribute): The attribute which the validation rule belongs to.
+        """
+        rule_is_schema = validation_rule == 'schema'
+        attribute_is_dict = attribute.get('type') == 'dict'
+        attribute_is_list = attribute.get('type') == 'list'
+        if rule_is_schema and attribute_is_dict:
+            return attribute[validation_rule]
+        elif rule_is_schema and attribute_is_list:
+            if attribute[validation_rule].get('type') == 'dict':
+                return attribute[validation_rule].get('schema', {})
+            else:
+                return {'rules': attribute[validation_rule]}
+        return None
+
     def generate_attributes(self, class_name: str, schema: Schema) -> None:
         """
         Takes a schema, generates MarkDown strings for every attribute -> validation rule and appends it to
@@ -232,17 +267,16 @@ class MarkDownUtils:
              schema (Schema): The schema that the function should generate documentation from.
         """
         additional_schemas: Dict[str, Schema] = {}
-        for key in schema.keys():
-            self._append_to_content(self._generate_name(key))
-            attribute: Attribute = schema[key]
+        for attribute_name in schema.keys():
+            self._append_to_content(self._generate_name(attribute_name))
+            attribute: Attribute = schema[attribute_name]
             formatted_attribute: FormattedAttribute = {}
-            for i, validation_rule in enumerate(attribute):
-                if validation_rule == 'schema':
-                    additional_schema_name: str = f'{class_name}{key.capitalize()}'
-                    additional_schemas[additional_schema_name] = attribute[validation_rule]
-                    formatted_attribute[validation_rule] = self._generate_schema(additional_schema_name)
-                else:
-                    formatted_attribute[validation_rule] = self.generator_map.get(validation_rule, lambda *args: None)(attribute[validation_rule])  # noqa: E501
+            for validation_rule in attribute:
+                schema_name: str = f'{class_name}{attribute_name.capitalize()}'
+                formatted_attribute[validation_rule] = self._format_validation_rule(validation_rule, attribute, schema_name)  # noqa: E501
+                additional_schema = self._get_schema(validation_rule, attribute)
+                if additional_schema:
+                    additional_schemas[schema_name] = additional_schema
             sorted_attribute: SortedAttribute = self._sort_attribute_fields_order(formatted_attribute)
             self._append_to_content(self._attribute_to_string(sorted_attribute))
         for additional_schema_name in additional_schemas.keys():

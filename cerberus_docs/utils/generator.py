@@ -1,3 +1,4 @@
+import sys
 import inspect
 from importlib import util
 from types import ModuleType
@@ -47,6 +48,7 @@ def import_module(file_name: str, file_path: str) -> ModuleType:
     """
     spec = util.spec_from_file_location(file_name, file_path)
     module: ModuleType = util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
 

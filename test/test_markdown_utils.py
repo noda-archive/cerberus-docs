@@ -131,18 +131,97 @@ class TestMarkDownUtils(unittest.TestCase):
                 '`test_attribute`: **[required]** string, must match (?<=-)w+, defaults to {}, one of;\n  - 1\n  - 2 \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
+
         with self.subTest('with nested schemas'):
-            attribute: Attribute = copy.deepcopy(self.attribute)
-            nested_attribute: Attribute = copy.deepcopy(self.attribute)
-            del nested_attribute['schema']
-            attribute['schema'] = {'nested_schema': nested_attribute}
-            schema: Schema = {'test_attribute': attribute}
+            schema: Schema = {
+                "test_attribute": {
+                    "type": "dict",
+                    "required": True,
+                    "schema": {
+                        "dataSources": {
+                            "type": "dict",
+                            "required": True,
+                            "schema": {
+                                "name": {
+                                    "type": "string",
+                                    "required": True
+                                }
+                            },
+                        }
+                    },
+                },
+            }
+            self.maxDiff = None
             self.md_utils.generate_attributes('TestClass', schema)
             self.assertEqual(
                 self.md_utils.content,
-                '`test_attribute`: **[required]** string, must match (?<=-)w+, defaults to {}, [TestClassTest_attribute](#TestClassTest_attribute) one of;\n  - 1\n  - 2 \n\n'  # noqa: E501
+                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
                 '\n## TestClassTest_attribute\n\n'
-                '`nested_schema`: **[required]** string, must match (?<=-)w+, defaults to {}, one of;\n  - 1\n  - 2 \n\n'  # noqa: E501
+                '`dataSources`: **[required]** dict, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
+                '\n## TestClassTest_attributeDatasources\n\n'
+                '`name`: **[required]** string, \n\n'  # noqa: E501
+            )
+            self.md_utils.content = ''
+
+        with self.subTest('with nested list schema containing dicts'):
+            schema: Schema = {
+                "test_attribute": {
+                    "type": "dict",
+                    "required": True,
+                    "schema": {
+                        "dataSources": {
+                            "type": "list",
+                            "required": True,
+                            "schema": {
+                                "type": "dict",
+                                "schema": {
+                                    "name": {
+                                        "type": "string",
+                                        "required": True
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+            self.maxDiff = None
+            self.md_utils.generate_attributes('TestClass', schema)
+            self.assertEqual(
+                self.md_utils.content,
+                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
+                '\n## TestClassTest_attribute\n\n'
+                '`dataSources`: **[required]** list, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
+                '\n## TestClassTest_attributeDatasources\n\n'
+                '`name`: **[required]** string, \n\n'  # noqa: E501
+            )
+            self.md_utils.content = ''
+
+        with self.subTest('with nested list schema containing integers'):
+            schema: Schema = {
+                "test_attribute": {
+                    "type": "dict",
+                    "required": True,
+                    "schema": {
+                        "dataSources": {
+                            "type": "list",
+                            "required": True,
+                            "schema": {
+                                "type": "integer",
+                            },
+                        },
+                    },
+                },
+            }
+            self.maxDiff = None
+            self.md_utils.generate_attributes('TestClass', schema)
+            self.assertEqual(
+                self.md_utils.content,
+                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
+                '\n## TestClassTest_attribute\n\n'
+                '`dataSources`: **[required]** list, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
+                '\n## TestClassTest_attributeDatasources\n\n'
+                '`rules`: integer, \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
 
