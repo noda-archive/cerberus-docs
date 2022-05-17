@@ -6,6 +6,18 @@ Cerberus-docs
 .. |forthebadge made-with-python| image:: http://ForTheBadge.com/images/badges/made-with-python.svg
    :target: https://www.python.org/
 
+|Run tests|
+
+.. |Run tests| image:: https://github.com/noda/cerberus-docs/actions/workflows/run-tests.yml/badge.svg
+
+|Deploy docs to Github Pages|
+
+.. |Deploy docs to Github Pages| image:: https://github.com/noda/cerberus-docs/actions/workflows/deploy-docs.yml/badge.svg
+
+|Lint code|
+
+.. |Lint code| image:: https://github.com/noda/cerberus-docs/actions/workflows/lint.yml/badge.svg
+
 About
 =====
 Library for generating documentation for `Cerberus <https://docs.python-cerberus.org/en/stable/>`_ schemas.
