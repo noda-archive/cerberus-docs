@@ -42,7 +42,8 @@ class MarkDownUtils:
             'allowed': self._generate_allowed,
             'regex': self._generate_regex,
             'default': self._generate_default,
-            'schema': self._generate_schema
+            'schema': self._generate_schema,
+            'meta': self._generate_description
         }
         self.validation_rule_priority_list: List[str] = [
             'required',
@@ -50,7 +51,8 @@ class MarkDownUtils:
             'regex',
             'default',
             'schema',
-            'allowed'
+            'allowed',
+            'meta'
         ]
         self.validation_rule_separators: Dict[str, str] = {
             'type': ', ',
@@ -168,6 +170,20 @@ class MarkDownUtils:
         """
         return f'[{class_name}](#{class_name})'
 
+    def _generate_description(self, meta_object) -> Optional[str]:
+        """
+        Generate a description of the attribute in MarkDown format by
+        reading the 'description' field in the meta object.
+
+        Args:
+            meta_object:
+
+        Returns:
+             MarkDown formatted string.
+        """
+        description = meta_object.get('description')
+        return f'\n\n\n    {description}' if description else None
+
     def _sort_attribute_fields_order(self, attribute: FormattedAttribute) -> SortedAttribute:
         """
         Sorts the attribute keys by the order in the priority list.
@@ -180,7 +196,7 @@ class MarkDownUtils:
             OrderedDict of the attributes keys ordered by the priority list
         """
         return OrderedDict(
-            [(x, attribute[x]) for x in self.validation_rule_priority_list if attribute.get(x) is not None]
+            [(rule, attribute[rule]) for rule in self.validation_rule_priority_list if attribute.get(rule) is not None]
         )
 
     def _get_validation_rule_separator(self, validation_rule: str) -> str:
@@ -253,7 +269,7 @@ class MarkDownUtils:
             if attribute[validation_rule].get('type') == 'dict':
                 return attribute[validation_rule].get('schema', {})
             else:
-                return {'rules': attribute[validation_rule]}
+                return {'_': attribute[validation_rule]}
         return None
 
     def generate_attributes(self, class_name: str, schema: Schema) -> None:

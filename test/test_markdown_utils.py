@@ -2,7 +2,7 @@ import os
 import copy
 import shutil
 import unittest
-from typing import List, Union, Any
+from typing import List, Union, Any, Dict
 
 from cerberus_docs import MarkDownUtils
 from cerberus_docs.classes.types import SortedAttribute, Attribute, Schema
@@ -80,6 +80,18 @@ class TestMarkDownUtils(unittest.TestCase):
     def test_generate_schema(self) -> None:
         class_name: str = 'TestClass'
         self.assertEqual(self.md_utils._generate_schema(class_name), f'[{class_name}](#{class_name})')
+
+    def test_generate_description(self) -> None:
+        with self.subTest('Description exists'):
+            meta_object: Dict = {'description': 'This is a description'}
+            self.assertEqual(
+                self.md_utils._generate_description(meta_object),
+                f'\n\n\n    {meta_object["description"]}'
+            )
+
+        with self.subTest('Description does not exist'):
+            meta_object: Dict = {'label': 'This is a label'}
+            self.assertIsNone(self.md_utils._generate_description(meta_object))
 
     def test_sort_attribute_fields_order(self) -> None:
         sorted_attribute: SortedAttribute = self.md_utils._sort_attribute_fields_order(self.attribute)
@@ -221,7 +233,7 @@ class TestMarkDownUtils(unittest.TestCase):
                 '\n## TestClassTest_attribute\n\n'
                 '`dataSources`: **[required]** list, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
                 '\n## TestClassTest_attributeDatasources\n\n'
-                '`rules`: integer, \n\n'  # noqa: E501
+                '`_`: integer, \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
 
