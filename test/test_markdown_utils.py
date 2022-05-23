@@ -4,8 +4,9 @@ import shutil
 import unittest
 from typing import List, Union, Any, Dict
 
-from cerberus_docs import MarkDownUtils
+from cerberus_docs import MarkDownUtils, CerberusDocsException
 from cerberus_docs.classes.types import SortedAttribute, Attribute, Schema
+from test.__mocks__.mock_schema import mock_schema
 
 
 class TestMarkDownUtils(unittest.TestCase):
@@ -115,6 +116,30 @@ class TestMarkDownUtils(unittest.TestCase):
         }
         self.assertEqual(self.md_utils._attribute_to_string(attribute), '**[required]** str, must match (?<=-)w+, \n\n')
 
+    def test_generate_schema_example_dict(self) -> None:
+        with self.subTest('successfully generated dict from schema'):
+            schema: Schema = copy.deepcopy(mock_schema)
+            generated_dict = self.md_utils._generate_schema_example_dict(schema)
+            expected_dict = {
+                'test1': 'v0',
+                'test2': 'str',
+                'test3': None,
+                'test4': {
+                    'test5': [
+                        {
+                            'test6': 'str',
+                            'test7': 'str'
+                        }
+                    ]
+                }
+            }
+            self.assertEqual(generated_dict, expected_dict)
+
+        with self.subTest('raises CerberusDocsException when type in schema is not supported'):
+            schema = copy.deepcopy(mock_schema)
+            schema['test2']['type'] = 'should raise exception'
+            self.assertRaises(CerberusDocsException, self.md_utils._generate_schema_example_dict, schema)
+
     def test_generate_header(self) -> None:
         title: str = 'TestTitle'
         with self.subTest('input level is below 1'):
@@ -146,15 +171,15 @@ class TestMarkDownUtils(unittest.TestCase):
 
         with self.subTest('with nested schemas'):
             schema: Schema = {
-                "test_attribute": {
+                "test1": {
                     "type": "dict",
                     "required": True,
                     "schema": {
-                        "dataSources": {
+                        "test2": {
                             "type": "dict",
                             "required": True,
                             "schema": {
-                                "name": {
+                                "test3": {
                                     "type": "string",
                                     "required": True
                                 }
@@ -167,27 +192,27 @@ class TestMarkDownUtils(unittest.TestCase):
             self.md_utils.generate_attributes('TestClass', schema)
             self.assertEqual(
                 self.md_utils.content,
-                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
-                '\n## TestClassTest_attribute\n\n'
-                '`dataSources`: **[required]** dict, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
-                '\n## TestClassTest_attributeDatasources\n\n'
-                '`name`: **[required]** string, \n\n'  # noqa: E501
+                '`test1`: **[required]** dict, [TestClassTest1](#TestClassTest1) \n\n'  # noqa: E501
+                '\n## TestClassTest1\n\n'
+                '`test2`: **[required]** dict, [TestClassTest1Test2](#TestClassTest1Test2) \n\n'  # noqa: E501
+                '\n## TestClassTest1Test2\n\n'
+                '`test3`: **[required]** string, \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
 
         with self.subTest('with nested list schema containing dicts'):
             schema: Schema = {
-                "test_attribute": {
+                "test1": {
                     "type": "dict",
                     "required": True,
                     "schema": {
-                        "dataSources": {
+                        "test2": {
                             "type": "list",
                             "required": True,
                             "schema": {
                                 "type": "dict",
                                 "schema": {
-                                    "name": {
+                                    "test3": {
                                         "type": "string",
                                         "required": True
                                     }
@@ -201,21 +226,21 @@ class TestMarkDownUtils(unittest.TestCase):
             self.md_utils.generate_attributes('TestClass', schema)
             self.assertEqual(
                 self.md_utils.content,
-                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
-                '\n## TestClassTest_attribute\n\n'
-                '`dataSources`: **[required]** list, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
-                '\n## TestClassTest_attributeDatasources\n\n'
-                '`name`: **[required]** string, \n\n'  # noqa: E501
+                '`test1`: **[required]** dict, [TestClassTest1](#TestClassTest1) \n\n'  # noqa: E501
+                '\n## TestClassTest1\n\n'
+                '`test2`: **[required]** list, [TestClassTest1Test2](#TestClassTest1Test2) \n\n'  # noqa: E501
+                '\n## TestClassTest1Test2\n\n'
+                '`test3`: **[required]** string, \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
 
         with self.subTest('with nested list schema containing integers'):
             schema: Schema = {
-                "test_attribute": {
+                "test1": {
                     "type": "dict",
                     "required": True,
                     "schema": {
-                        "dataSources": {
+                        "test2": {
                             "type": "list",
                             "required": True,
                             "schema": {
@@ -229,13 +254,33 @@ class TestMarkDownUtils(unittest.TestCase):
             self.md_utils.generate_attributes('TestClass', schema)
             self.assertEqual(
                 self.md_utils.content,
-                '`test_attribute`: **[required]** dict, [TestClassTest_attribute](#TestClassTest_attribute) \n\n'  # noqa: E501
-                '\n## TestClassTest_attribute\n\n'
-                '`dataSources`: **[required]** list, [TestClassTest_attributeDatasources](#TestClassTest_attributeDatasources) \n\n'  # noqa: E501
-                '\n## TestClassTest_attributeDatasources\n\n'
+                '`test1`: **[required]** dict, [TestClassTest1](#TestClassTest1) \n\n'  # noqa: E501
+                '\n## TestClassTest1\n\n'
+                '`test2`: **[required]** list, [TestClassTest1Test2](#TestClassTest1Test2) \n\n'  # noqa: E501
+                '\n## TestClassTest1Test2\n\n'
                 '`_`: integer, \n\n'  # noqa: E501
             )
             self.md_utils.content = ''
+
+    def test_generate_schema_example(self) -> None:
+        schema: Schema = copy.deepcopy(mock_schema)
+        self.md_utils.generate_schema_example(schema)
+        self.assertEqual(
+            self.md_utils.content,
+            '\n'
+            '## Example Schema Input'
+            '\n'
+            '\n'
+            '```\n'
+            'test1: v0\n'
+            'test2: str\n'
+            'test3: null\n'
+            'test4:\n'
+            '  test5:\n'
+            '  - test6: str\n'
+            '    test7: str\n'
+            '```\n'
+        )
 
     def test_create_md_file(self) -> None:
         content = 'Hello World!'

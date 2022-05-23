@@ -71,6 +71,7 @@ def generate_docs(schema_map: SchemaMap, build_dir: str) -> None:
                 file_mode=file_mode,
                 file_path=build_dir
             )
-            md_file.generate_header(level=2, title=class_name)
+            md_file.generate_header(class_name, level=2)
             md_file.generate_attributes(class_name, schema)
+            md_file.generate_schema_example(schema)
             md_file.create_md_file()
