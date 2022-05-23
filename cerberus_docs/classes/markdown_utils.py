@@ -1,8 +1,12 @@
+import yaml
+import base64
+import datetime
 from collections import OrderedDict
 from typing import Optional, Dict, Any, List, Union
 
 from .markdown_file import MarkDownFile
 from .types import Schema, Attribute, SortedAttribute, FormattedAttribute
+from .exceptions import CerberusDocsException
 
 
 class MarkDownUtils:
@@ -225,17 +229,55 @@ class MarkDownUtils:
         result += '\n\n'
         return result
 
-    def generate_header(self, title: str, level: Optional[int] = 1) -> None:
+    def _generate_schema_example_dict(self, schema: Schema) -> Dict:
         """
-        Generate a header in MarkDown format given a title and level and appends it to self.content.
+        Generates and returns a dict which serves as an example of valid input for the schema.
 
         Args:
-             title (str): Header title
-             level (Optional[int]): Header level, 1 - 6 is allowed. Default is 1.
+             schema (Schema): The schema to generate an example for
+
+        Raises:
+            :class:`.CerberusDocsException`: Type in schema not supported
         """
-        restricted_level: int = 6 if level > 6 else 1 if level < 1 else level
-        header: str = f"\n{'#' * restricted_level} {title}\n\n"
-        self._append_to_content(header)
+        def _get_default_value_by_type(type_: str) -> Union[str, bool, datetime.datetime, datetime.date, float, int]:
+            default_value_type_map = {
+                'string': 'str',
+                'boolean': True,
+                'binary': base64.b64encode(b'example binary').decode(),
+                'date': datetime.datetime(2022, 1, 1).date().isoformat(),
+                'datetime': datetime.datetime(2022, 1, 1).isoformat(),
+                'float': 1.2345,
+                'integer': 12345,
+                'number': 12345,
+            }
+            try:
+                return default_value_type_map[type_]
+            except KeyError:
+                raise CerberusDocsException(f'Type {type_} not supported')
+
+        result = {}
+        for attribute_name, attribute_value in schema.items():
+            attribute_type = attribute_value.get('type')
+            default_value = attribute_value.get('default')
+            allowed = attribute_value.get('allowed')
+            allowed = allowed[0] if allowed else None
+            attribute_schema = attribute_value.get('schema', {})
+            nested_schema = attribute_schema.get('schema')
+            if attribute_type == 'dict':
+                result[attribute_name] = (
+                    self._generate_schema_example_dict(attribute_schema)
+                    if attribute_schema
+                    else None
+                )
+            elif attribute_type == 'list':
+                result[attribute_name] = (
+                    [self._generate_schema_example_dict(nested_schema)]
+                    if attribute_schema and nested_schema and attribute_schema.get('type') == 'dict'
+                    else None
+                )
+            else:
+                result[attribute_name] = default_value or allowed or _get_default_value_by_type(attribute_type)
+        return result
 
     def _format_validation_rule(self, validation_rule: str, attribute: Attribute, schema_name: str) -> Optional[str]:
         """
@@ -298,6 +340,33 @@ class MarkDownUtils:
         for additional_schema_name in additional_schemas.keys():
             self.generate_header(level=2, title=additional_schema_name)
             self.generate_attributes(additional_schema_name, additional_schemas[additional_schema_name])
+
+    def generate_header(self, title: str, level: Optional[int] = 1) -> None:
+        """
+        Generate a header in MarkDown format given a title and level and appends it to self.content.
+
+        Args:
+             title (str): Header title
+             level (Optional[int]): Header level, 1 - 6 is allowed. Default is 1.
+        """
+        restricted_level: int = 6 if level > 6 else 1 if level < 1 else level
+        header: str = f"\n{'#' * restricted_level} {title}\n\n"
+        self._append_to_content(header)
+
+    def generate_schema_example(self, schema: Schema) -> None:
+        """
+        Generates a yaml structure which serves as an example of valid input for the schema.
+
+        Args:
+             schema (Schema): The schema to generate an example for
+
+        Raises:
+            :class:`.CerberusDocsException`: Type in schema not supported
+        """
+        schema_example_dict = self._generate_schema_example_dict(schema)
+        schema_example_yaml = yaml.dump(schema_example_dict)
+        self.generate_header('Example Schema Input', level=2)
+        self._append_to_content(f'```\n{schema_example_yaml}```\n')
 
     def create_md_file(self) -> MarkDownFile:
         """

@@ -40,10 +40,10 @@ class TestCli(unittest.TestCase):
         self.assertTrue(md_file_mock.is_file())
 
         with open(parent_file_path, 'r') as parent_file:
-            self.assertEqual(parent_file.read(), '\n## MockFileParent\n\n`name`: string, \n\n')
+            self.assertEqual(parent_file.read(), '\n## MockFileParent\n\n`name`: string, \n\n\n## Example Schema Input\n\n```\nname: str\n```\n')  # noqa: E501
 
         with open(child_file_path, 'r') as child_file:
-            self.assertEqual(child_file.read(), '\n## MockFileChild\n\n`name`: string, \n\n')
+            self.assertEqual(child_file.read(), '\n## MockFileChild\n\n`name`: string, \n\n\n## Example Schema Input\n\n```\nname: str\n```\n')  # noqa: E501
 
         with open(mock_file_path, 'r') as mock_file:
-            self.assertEqual(mock_file.read(), '\n## MockFile1\n\n`name`: string, \n\n')
+            self.assertEqual(mock_file.read(), '\n## MockFile1\n\n`name`: string, \n\n\n## Example Schema Input\n\n```\nname: str\n```\n')  # noqa: E501
