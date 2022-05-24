@@ -16,10 +16,6 @@ API Reference
    :maxdepth: 2
 
    references/classes/index
-
-.. toctree::
-   :maxdepth: 2
-
    references/exceptions
 
 
