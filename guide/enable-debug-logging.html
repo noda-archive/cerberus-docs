@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Getting Started &mdash; cerberus-docs  documentation</title>
+  <title>Enable Debug Logging &mdash; cerberus-docs  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Classes" href="../references/classes/index.html" />
-    <link rel="prev" title="&lt;no title&gt;" href="index.html" /> 
+    <link rel="prev" title="Running Tests" href="running-tests.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,17 +38,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#using-cerberus-docs">Using Cerberus-docs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#enable-debug-logging">Enable Debug Logging</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running-tests.html">Running Tests</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Enable Debug Logging</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../references/classes/index.html">Classes</a></li>
-</ul>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../references/exceptions.html">Exceptions</a></li>
 </ul>
 
@@ -67,9 +62,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
           <li><a href="index.html">&lt;no title&gt;</a> &raquo;</li>
-      <li>Getting Started</li>
+      <li>Enable Debug Logging</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/guide/getting_started.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/guide/enable-debug-logging.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -77,51 +72,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="getting-started">
-<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline"></a></h1>
-<p>Assuming that you have Python 3.7 or higher and <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> installed, set up your environment and install the required dependencies like this:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/noda/cerberus-docs.git
-$ <span class="nb">cd</span> cerberus-docs
-$ virtualenv venv
-...
-$ . venv/bin/activate
-$ python -m pip install -r requirements/requirements.txt
-</pre></div>
-</div>
-<section id="using-cerberus-docs">
-<h2>Using Cerberus-docs<a class="headerlink" href="#using-cerberus-docs" title="Permalink to this headline"></a></h2>
-<p>In order for cerberus-docs to be able to find the Cerberus schemas, every schema that should be documented must be wrapped by the CerberusSchema class.</p>
-<p>To retrieve the original dict from the class, use the <code class="docutils literal notranslate"><span class="pre">.to_schema()</span></code> method.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cerberus_docs</span> <span class="kn">import</span> <span class="n">CerberusSchema</span>
-
-<span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
-    <span class="n">cerberus_schema</span> <span class="o">=</span> <span class="n">CerberusSchema</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">}})</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">v</span> <span class="o">=</span> <span class="n">Validator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cerberus_schema</span><span class="o">.</span><span class="n">to_schema</span><span class="p">())</span>
-</pre></div>
-</div>
-<p>To run cerberus-docs use the command <code class="docutils literal notranslate"><span class="pre">cerberus-docs</span></code> and specify:</p>
-<p><code class="docutils literal notranslate"><span class="pre">--source-dir</span></code>: The directory with the source code. Cerberus-docs will find every python module in the directory tree and look for CerberusSchema classes. Defaults to the current working directory.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--build-dir</span></code>: The directory where the generated documentation files will be saved. Defaults to the current working directory.</p>
-<p>Example:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ cerberus-docs --source-dir ./myProject --build-dir ./myDocs
-Docs successfully generated.
-</pre></div>
-</div>
-</section>
-<section id="running-tests">
-<h2>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline"></a></h2>
-<p>You can run tests in all supported Python versions using <code class="docutils literal notranslate"><span class="pre">tox</span></code>. By default,
-it will run all of the unit tests, linters and coverage. Note that this requires that you have all supported
-versions of Python installed, otherwise you must pass <code class="docutils literal notranslate"><span class="pre">-e</span></code>.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ tox
-$ tox -e py37,py38
-</pre></div>
-</div>
-</section>
-<section id="enable-debug-logging">
-<h2>Enable Debug Logging<a class="headerlink" href="#enable-debug-logging" title="Permalink to this headline"></a></h2>
+  <section id="enable-debug-logging">
+<h1>Enable Debug Logging<a class="headerlink" href="#enable-debug-logging" title="Permalink to this headline"></a></h1>
 <p>To enable logging, add a handler to the <cite>cerberus_docs</cite> logger:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;cerberus_docs&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">())</span>
@@ -129,13 +81,12 @@ $ tox -e py37,py38
 </pre></div>
 </div>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="&lt;no title&gt;" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="running-tests.html" class="btn btn-neutral float-left" title="Running Tests" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../references/classes/index.html" class="btn btn-neutral float-right" title="Classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

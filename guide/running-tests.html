@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Exceptions &mdash; cerberus-docs  documentation</title>
+  <title>Running Tests &mdash; cerberus-docs  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -18,7 +18,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="MarkDown Utils" href="classes/markdown_utils.html" /> 
+    <link rel="next" title="Enable Debug Logging" href="enable-debug-logging.html" />
+    <link rel="prev" title="Guide" href="guide.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,14 +37,14 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="../guide/guide.html">Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/running-tests.html">Running Tests</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../guide/enable-debug-logging.html">Enable Debug Logging</a></li>
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Running Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="enable-debug-logging.html">Enable Debug Logging</a></li>
 </ul>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="classes/index.html">Classes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Exceptions</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../references/classes/index.html">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../references/exceptions.html">Exceptions</a></li>
 </ul>
 
         </div>
@@ -60,9 +61,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Exceptions</li>
+          <li><a href="index.html">&lt;no title&gt;</a> &raquo;</li>
+      <li>Running Tests</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/references/exceptions.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/guide/running-tests.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -70,25 +72,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-cerberus_docs.classes.exceptions">
-<span id="exceptions"></span><h1>Exceptions<a class="headerlink" href="#module-cerberus_docs.classes.exceptions" title="Permalink to this headline"></a></h1>
-<dl class="py exception">
-<dt class="sig sig-object py" id="cerberus_docs.classes.exceptions.CerberusDocsException">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cerberus_docs.classes.exceptions.</span></span><span class="sig-name descname"><span class="pre">CerberusDocsException</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'An</span> <span class="pre">error</span> <span class="pre">occurred'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerberus_docs.classes.exceptions.CerberusDocsException" title="Permalink to this definition"></a></dt>
-<dd><dl class="py method">
-<dt class="sig sig-object py" id="cerberus_docs.classes.exceptions.CerberusDocsException.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'An</span> <span class="pre">error</span> <span class="pre">occurred'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cerberus_docs.classes.exceptions.CerberusDocsException.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
+  <section id="running-tests">
+<h1>Running Tests<a class="headerlink" href="#running-tests" title="Permalink to this headline"></a></h1>
+<p>You can run tests in all supported Python versions using <code class="docutils literal notranslate"><span class="pre">tox</span></code>. By default,
+it will run all of the unit tests, linters and coverage. Note that this requires that you have all supported
+versions of Python installed, otherwise you must pass <code class="docutils literal notranslate"><span class="pre">-e</span></code>.</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$ tox
+$ tox -e py37,py38
+</pre></div>
+</div>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="classes/markdown_utils.html" class="btn btn-neutral float-left" title="MarkDown Utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guide.html" class="btn btn-neutral float-left" title="Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="enable-debug-logging.html" class="btn btn-neutral float-right" title="Enable Debug Logging" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
